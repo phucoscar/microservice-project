@@ -7,6 +7,7 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @Component
-public class JwtAuthenticationFilter implements GatewayFilter {
+public class JwtAuthenticationFilter implements GlobalFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -29,7 +30,6 @@ public class JwtAuthenticationFilter implements GatewayFilter {
         ServerHttpRequest request =  exchange.getRequest();
 
         List<String> apiEndpoints = Arrays.asList("/register","/login");
-
         // check url contain register or login
         Predicate<ServerHttpRequest> isApiSecured = r -> apiEndpoints.stream()
                 .noneMatch(uri -> r.getURI().getPath().contains(uri));
